@@ -16,11 +16,23 @@ const borderTriangle=()=>{
         gl.drawArrays(gl.LINE_LOOP,0,i);
     }
 }
-
+//绘制实心矩形
+const rectangle=()=>{
+    for(let i=1;i<=4;i++)
+    {
+        //其中gl.TRIANGLE_STRIP决定绘制方式为闭合三角面
+        gl.drawArrays(gl.TRIANGLE_STRIP,0,i);
+    }
+}
 //缓冲区初始化
 const bufferInit = (a_Position) => {
+    //等腰三角形坐标
+    // const vertices = new Float32Array([
+    //     0.0, 0.5, -0.5, -0.5, 0.5, -0.5
+    // ]);
+    
     const vertices = new Float32Array([
-        0.0, 0.5, -0.5, -0.5, 0.5, -0.5
+        -0.5, 0.5, -0.5, -0.5, 0.5, 0.5,0.5,-0.5
     ]);
     vertexBuffer = gl.createBuffer();
     //创建缓冲区对象
@@ -28,7 +40,7 @@ const bufferInit = (a_Position) => {
         console.log('创建缓冲区失败');
         return -1;
     }
-    console.log(vertices);
+ 
     //将缓冲区对象绑定到目标
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     //向缓冲区对象中写入数据
@@ -38,8 +50,9 @@ const bufferInit = (a_Position) => {
     //开启attribute变量(gl.enableVertex AttribArray()方法开启attribute变量),开启之后，会与vertexAttrib3产生冲突，从而导致鼠标点击绘制功能失效
     gl.enableVertexAttribArray(a_Position);
     //绘制空心三角形
-    borderTriangle();
-    //
+    //borderTriangle();
+    //绘制实心矩形
+    rectangle();
 
 }
 const glClear = () => {
