@@ -24,6 +24,15 @@ const rectangle=()=>{
         gl.drawArrays(gl.TRIANGLE_STRIP,0,i);
     }
 }
+//绘制多边形
+const polygonPaint=()=>{
+    
+    for(let i=1;i<=6;i++)
+    {
+        //其中gl.TRIANGLE_STRIP决定绘制方式为闭合三角面
+        gl.drawArrays(gl.TRIANGLES,0,i);
+    }
+}
 //缓冲区初始化
 const bufferInit = (a_Position) => {
     //等腰三角形坐标
@@ -31,8 +40,14 @@ const bufferInit = (a_Position) => {
     //     0.0, 0.5, -0.5, -0.5, 0.5, -0.5
     // ]);
     
+    //正方形坐标
+    // const vertices = new Float32Array([
+    //     -0.5, 0.5, -0.5, -0.5, 0.5, 0.5,0.5,-0.5
+    // ]);
+
+     //多边形坐标
     const vertices = new Float32Array([
-        -0.5, 0.5, -0.5, -0.5, 0.5, 0.5,0.5,-0.5
+        -0.5, 0.5, -0.5, -0.5, 0, 0,0.5,-0.5,0.5,0.5,-0.5, 0.5
     ]);
     vertexBuffer = gl.createBuffer();
     //创建缓冲区对象
@@ -52,8 +67,9 @@ const bufferInit = (a_Position) => {
     //绘制空心三角形
     //borderTriangle();
     //绘制实心矩形
-    rectangle();
-
+    //rectangle();
+    //绘制多边形
+    polygonPaint();
 }
 const glClear = () => {
     //指定清空<canvas>的颜色
