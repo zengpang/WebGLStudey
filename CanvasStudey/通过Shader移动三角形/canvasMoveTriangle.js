@@ -2,10 +2,31 @@
 // import vertShader from'./shader/point.vert';
 // import fragShader from './shader/point.frag';
 const shaderPath='./shader/point';
+function initVertexBuffers(gl){
+    const vertices=new Float32Array([
+        0.0,0.5,-0.5,-0.5,0.5,-0.5
+    ]);
+    const n=3;//顶点数量
+    const verextBuffer=gl.createBuffer();
+    if(!verextBuffer)
+    {
+        console.log('创建buffer失败');
+        return -1;
+    }
+    gl.bingBuffer(gl.ARRAY_BUFFER,verextBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+    const a_Position=gl.getAttribLocation(gl.program,'a_Position');
+    if(a_Position<0)
+    {
+        console.log('获取a_Position失败');
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0.0);
+}
 function main() {
     const vertStr=loadFile(`${shaderPath}.vert`);
     const fragStr=loadFile(`${shaderPath}.frag`);
-   
+    const Tx=0.5,Ty=0.5,Tz=0.0;
     //通过id获取画布元素
     let mainCanvas = document.getElementById('main');
     //获取WebGL绘图上下文
@@ -20,7 +41,10 @@ function main() {
         console.log('初始shader失败');
         return;
     }
-    let n=initVertex();
+    let n=initVertexBuffers(gl);
+    //将平移距离传输给定点着色器
+    const u_Translation=gl.getUniformLocation(gl.program,'u_Translation');
+    gl.uniform4f(u_Translation,Tx,Ty,Tz,0.0);
     //获取attribute变量的存储地址,通过地址修改着色器变量
     /**gl.getAttribLocation(program,name)
      * 其中program形参为指定包含顶点着色器和片元着色器的着色器程序对象
@@ -43,6 +67,6 @@ function main() {
      * 传递参数gl.COLOR_BUFFER**/
     gl.clear(gl.COLOR_BUFFER_BIT);
     //绘制
-    gl.drawArrays(gl.POINTS,0,1);
+    gl.drawArrays(gl.TRIANGLES,0,1);
     
 }
