@@ -13,8 +13,16 @@ function initVertexBuffers(gl){
         console.log('创建buffer失败');
         return -1;
     }
+     //将缓冲区对象绑定到目标
     gl.bindBuffer(gl.ARRAY_BUFFER,verextBuffer);
     gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
+     //获取attribute变量的存储地址,通过地址修改着色器变量
+    /**gl.getAttribLocation(program,name)
+     * 其中program形参为指定包含顶点着色器和片元着色器的着色器程序对象
+     * name形参为指定想要获取其存储地址的attribute变量的名称
+     * 如果返回值大于等于0，则该值为attribute变量的存储地址
+     * -1即小于0，则指定的attribute变量不存在，或者命名具有gl_
+     */
     const a_Position=gl.getAttribLocation(gl.program,'a_Position');
     if(a_Position<0)
     {
@@ -48,13 +56,7 @@ function main() {
     //将平移距离传输给定点着色器
     const u_Translation=gl.getUniformLocation(gl.program,'u_Translation');
     gl.uniform4f(u_Translation,Tx,Ty,Tz,0.0);
-    //获取attribute变量的存储地址,通过地址修改着色器变量
-    /**gl.getAttribLocation(program,name)
-     * 其中program形参为指定包含顶点着色器和片元着色器的着色器程序对象
-     * name形参为指定想要获取其存储地址的attribute变量的名称
-     * 如果返回值大于等于0，则该值为attribute变量的存储地址
-     * -1即小于0，则指定的attribute变量不存在，或者命名具有gl_
-     */
+   
     let a_Position=gl.getAttribLocation(gl.program,'a_Position');
     if(a_Position<0)
     {
