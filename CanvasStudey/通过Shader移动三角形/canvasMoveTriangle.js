@@ -1,7 +1,7 @@
 //import { loadFile } from "../../examples/examples/lib/loadFile";
 // import vertShader from'./shader/point.vert';
 // import fragShader from './shader/point.frag';
-const shaderPath='./shader/point';
+const shaderPath='./shader/moveTriangle';
 function initVertexBuffers(gl){
     const vertices=new Float32Array([
         0.0,0.5,-0.5,-0.5,0.5,-0.5
@@ -13,7 +13,7 @@ function initVertexBuffers(gl){
         console.log('创建buffer失败');
         return -1;
     }
-    gl.bingBuffer(gl.ARRAY_BUFFER,verextBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER,verextBuffer);
     gl.bufferData(gl.ARRAY_BUFFER,vertices,gl.STATIC_DRAW);
     const a_Position=gl.getAttribLocation(gl.program,'a_Position');
     if(a_Position<0)
@@ -21,7 +21,10 @@ function initVertexBuffers(gl){
         console.log('获取a_Position失败');
         return -1;
     }
-    gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0.0);
+    gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,0,0);
+
+    gl.enableVertexAttribArray(a_Position);
+    return n;
 }
 function main() {
     const vertStr=loadFile(`${shaderPath}.vert`);
@@ -67,6 +70,6 @@ function main() {
      * 传递参数gl.COLOR_BUFFER**/
     gl.clear(gl.COLOR_BUFFER_BIT);
     //绘制
-    gl.drawArrays(gl.TRIANGLES,0,1);
+    gl.drawArrays(gl.TRIANGLES,0,n);
     
 }
