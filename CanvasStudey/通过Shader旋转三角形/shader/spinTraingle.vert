@@ -1,8 +1,8 @@
 attribute vec4 a_Position;//存储限定符变量
-uniform vec4 u_CosB,u_sinB;//存储旋转角度
+uniform float u_CosB,u_SinB;//存储旋转角度
 void main(){
-    gl_Position.x=a_Position.x*u_CosB-a_Position.y*u_sinB;
-    gl_Position.y=a_Position.x*u_sinB+a_Position.y*u_CosB;
+    gl_Position.x=a_Position.x*u_CosB-a_Position.y*u_SinB;
+    gl_Position.y=a_Position.x*u_SinB+a_Position.y*u_CosB;
     gl_Position.z=a_Position.z;
     gl_Position.w=1.0;
     //由4个分量组成的矢量被称为齐次坐标

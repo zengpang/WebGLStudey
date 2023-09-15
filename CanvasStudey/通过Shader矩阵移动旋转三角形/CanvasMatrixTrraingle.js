@@ -1,7 +1,7 @@
 //import { loadFile } from "../../examples/examples/lib/loadFile";
 // import vertShader from'./shader/point.vert';
 // import fragShader from './shader/point.frag';
-const shaderPath='./shader/spinTraingle';
+const shaderPath='./shader/baseMatrixTrraingle';
 function initVertexBuffers(gl){
     const vertices=new Float32Array([
         0.0,0.5,-0.5,-0.5,0.5,-0.5
@@ -57,12 +57,9 @@ function main() {
     const radian=Math.PI*ANGLE/180;//转为弧度制
     const cosB=Math.cos(radian);
     const sinB=Math.sin(radian);
-    const u_CosB = gl.getUniformLocation(gl.program, 'u_CosB');
-    const u_SinB = gl.getUniformLocation(gl.program, 'u_SinB');
-  if (!u_CosB || !u_SinB) {
-    console.log('Failed to get the storage location of u_CosB or u_SinB');
-    return;
-  }
+    const xformMatrix=new Float32Array({
+        
+    })
     //将平移距离传输给定点着色器
     const u_Translation=gl.getUniformLocation(gl.program,'u_Translation');
     gl.uniform1f(u_CosB, cosB);
