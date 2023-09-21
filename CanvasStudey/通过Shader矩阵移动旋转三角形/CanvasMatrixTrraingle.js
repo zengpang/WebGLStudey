@@ -57,14 +57,23 @@ function main() {
     const radian=Math.PI*ANGLE/180;//转为弧度制
     const cosB=Math.cos(radian);
     const sinB=Math.sin(radian);
-    const xformMatrix=new Float32Array({
-        
-    })
-    //将平移距离传输给定点着色器
-    const u_Translation=gl.getUniformLocation(gl.program,'u_Translation');
-    gl.uniform1f(u_CosB, cosB);
-    gl.uniform1f(u_SinB, sinB);
-   
+    const tx=0.5;
+    const ty=0.5;
+    const tz=0.0;
+    //注意WebGL中矩阵是列主序,列主序指的是从上往下计算
+    const xformMatrix=new Float32Array([
+        cosB,sinB,0,0,
+        -sinB,cosB,0,0,
+        0.0,0.0,1.0,0.0,
+        tx,ty,tz,1.0
+    ]);
+    const u_xformMatrix=gl.getUniformLocation(gl.program,'u_xformMatrix');
+    //gl.uniformMatrix4fv(location,transpose,array)函数,将array表示的4x4矩阵分配给用location指定的uniform变量
+    //location uniform变量的存储位置
+    //Transpose 在WebGL中必须指定为false 因为该参数表示是否转置矩阵。转置操作将交换矩阵的行和列，webGL实现没有提供矩阵转置的方法，所以该参数必须设为false
+    //array 待传输的类型化数组，4x4矩阵按列主序存储在其中
+    gl.uniformMatrix4fv(u_xformMatrix,false,xformMatrix);
+    
     let a_Position=gl.getAttribLocation(gl.program,'a_Position');
     if(a_Position<0)
     {
