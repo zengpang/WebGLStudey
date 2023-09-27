@@ -1,10 +1,11 @@
 //import { loadFile } from "../../examples/examples/lib/loadFile";
 // import vertShader from'./shader/point.vert';
 // import fragShader from './shader/point.frag';
-const shaderPath='./shader/baseMatrixTrraingle';
+const shaderPath='./shader/rotatedTranslatedTriangle';
 function initVertexBuffers(gl){
     const vertices=new Float32Array([
         0.0,0.5,-0.5,-0.5,0.5,-0.5
+
     ]);
     const n=3;//顶点数量
     const verextBuffer=gl.createBuffer();
@@ -35,7 +36,7 @@ function initVertexBuffers(gl){
     gl.enableVertexAttribArray(a_Position);
     return n;
 }
-const ANGLE=90;
+
 function main() {
     const vertStr=loadFile(`${shaderPath}.vert`);
     const fragStr=loadFile(`${shaderPath}.frag`);
@@ -54,21 +55,19 @@ function main() {
         return;
     }
     let n=initVertexBuffers(gl);
-    const radian=Math.PI*ANGLE/180;//转为弧度制
-    const cosB=Math.cos(radian);
-    const sinB=Math.sin(radian);
-    const tx=0.5;
-    const ty=0.5;
-    const tz=0.0;
+   
     //注意WebGL中矩阵是列主序,列主序指的是从上往下计算
-    const xformMatrix=new Matrix4();
-    xformMatrix.setRotate(ANGLE,0,0,1);
-    const u_xformMatrix=gl.getUniformLocation(gl.program,'u_xformMatrix');
+    const modelMatrix=new Matrix4();
+    const ANGLE=60;
+    const tx=0.5;
+    modelMatrix.setRotate(ANGLE,0,0,1);
+    modelMatrix.translate(tx,0,0);
+    const u_ModelMatrix=gl.getUniformLocation(gl.program,'u_ModelMatrix');
     //gl.uniformMatrix4fv(location,transpose,array)函数,将array表示的4x4矩阵分配给用location指定的uniform变量
     //location uniform变量的存储位置
     //Transpose 在WebGL中必须指定为false 因为该参数表示是否转置矩阵。转置操作将交换矩阵的行和列，webGL实现没有提供矩阵转置的方法，所以该参数必须设为false
     //array 待传输的类型化数组，4x4矩阵按列主序存储在其中
-    gl.uniformMatrix4fv(u_xformMatrix,false,xformMatrix.elements);
+    gl.uniformMatrix4fv(u_ModelMatrix,false,modelMatrix.elements);
     
     let a_Position=gl.getAttribLocation(gl.program,'a_Position');
     if(a_Position<0)
