@@ -3,29 +3,27 @@
 // import fragShader from './shader/point.frag';
 const shaderPath='./shader/point';
 function initVertexBuffers(gl){
-    //定义顶点数组
-    const verticesSizes=new Float32Array([
-        0.0,0.5,10.0,//第一个点
-        -0.5,-0.5,20.0,//第二个点
-        0.5,-0.5,30.0//第三个点
+    const verticesColors=new Float32Array([
+        0.0,0.5,1.0,0.0,0.0,
+        -0.5,-0.5,0.0,1.0,0.0,
+        0.5,-0.5,0.0,0.0,1.0
     ]);
     const n=3;//顶点数量
-  
-    //创建缓冲区对象
-    const verexSizeBuffer=gl.createBuffer();
+   
 
-    if(!verexSizeBuffer)
+    const vertexColorBuffer=gl.createBuffer();
+
+    if(!vertexColorBuffer)
     {
         console.log('创建buffer失败');
         return -1;
     }
      //将缓冲区对象绑定到目标
-    gl.bindBuffer(gl.ARRAY_BUFFER,verexSizeBuffer);
-    //将顶点坐标和尺寸写入缓冲区并开启
-    gl.bufferData(gl.ARRAY_BUFFER,verticesSizes,gl.STATIC_DRAW);
-    //FSIZE存储每个元素的大小(字节数),其中BYTES_PER_ELEMENT为类型化数组具有的属性，表示可以从中获知数组中每个元素所占的字节数。
-    const FSIZE=verticesSizes.BYTES_PER_ELEMENT;
-    //获取attribute变量的存储地址,通过地址修改着色器变量
+    gl.bindBuffer(gl.ARRAY_BUFFER,vertexColorBuffer);
+    //
+    gl.bufferData(gl.ARRAY_BUFFER,verticesColors,gl.STATIC_DRAW);
+    const FSIZE=verticesColors.BYTES_PER_ELEMENT;
+     //获取attribute变量的存储地址,通过地址修改着色器变量
     /**gl.getAttribLocation(program,name)
      * 其中program形参为指定包含顶点着色器和片元着色器的着色器程序对象
      * name形参为指定想要获取其存储地址的attribute变量的名称
@@ -38,17 +36,14 @@ function initVertexBuffers(gl){
         console.log('获取a_Position失败');
         return -1;
     }
-    //vertexAttribPointer函数的作用是告诉显卡从当前绑定的缓冲区中读取顶点数据
-    //其调用结构为gl.vertexAttribPointer(index, size, type, normalized, stride, offset);
-    //index为欲修改的attribute变量存储地址,size表示变量是几维数据，type为变量的数据类型
-    //normalized为是否进行归一化，true代表进行归一化，false则代表否定
-    //stride数据一行的长度，offset指定顶点属性数组中第一部分的字节偏移量
-    gl.vertexAttribPointer(a_Position,2,gl.FLOAT,false,FSIZE*3,0);
-    gl.enableVertexAttribArray(a_Position);//开启分配
-    //获取a_Position的存储位置，分配缓冲区并开启
-    const a_PointSize=gl.getAttribLocation(gl.program,'a_PointSize');
-    gl.vertexAttribPointer(a_PointSize,1,gl.FLOAT,false,FSIZE*3,FSIZE*2);
-    gl.enableVertexAttribArray(a_PointSize);//开启缓冲区分配
+    gl.vertexAttribPointer(a_Position,2,gl.FLOAT,FSIZE*5,0,0);
+    gl.enableVertexAttribArray(a_Position);
+
+    //获取a_Color的存储位置，分配缓冲区并开启
+    const a_Color=gl.getAttribLocation(gl.program,'a_Color');
+
+    gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,FSIZE*5,FSIZE*2);
+    gl.enableVertexAttribArray(a_Color);
     return n;
 }
 const ANGLE=90;
