@@ -97,7 +97,7 @@ function loadTexture(gl,n,texture,u_Sampler,image)
     */
    gl.bindTexture(gl.TEXTURE_2D,texture);//绑定纹理对象
    /**
-    配置纹理对象的参数(gl.texParameteri())
+    配置纹理对象的参数(gl.texParameteri(target,pname,param))
     通过gl.texParameteri()方法配置纹理图像映射到图形上的具体方式:
     如何根据纹理坐标获取纹素颜色，按哪种方式重复填充纹理。
     具体所需参数如下
@@ -110,10 +110,35 @@ function loadTexture(gl,n,texture,u_Sampler,image)
     （3）param 纹理参数的值，具体的纹理参数如下
         (一) gl.NEAREST 使用原纹理上距离映射后像素(新像素)中心最近的那个像素的颜色值，作为新像素的值(使用曼哈顿距离)
         (二) gl.LINEAR 使用距离新像素中心最近的四个像素的颜色值的加权
-           
+    （4）错误 参数返回值为 INVALID_ENUM target不是合法的值
+              INVALID_OFERATION 当前目标上没有绑定纹理对象      
         
     */
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);//配置纹理参数
+   /**
+    将纹理图像分配给纹理对象(gl.texImage2D())
+    我们使用gl.texImage2D()方法将纹理图像分配给纹理对象，同时该函数还允许告诉WebGL系统关于该图像的一些特性
+    （1）target gl.TEXTURE_2D或gl.TEXTURE_CUBE_MAP
+    （2）level 传入0(实际上,该参数是为金字塔纹理准备的)
+    （3）internalformat 图像的内部格式
+        (一) gl.RGB 红，绿，蓝
+        (二) gl.RGBA 红，绿，蓝，透明度
+        (三) gl.ALPHA (0.0,0.0,0.0,透明度)
+        (四) gl.LUMINANCE L,L,L,1L:流明 
+        (五) gl.LUMINANCE_ALPHA L,L,L,透明度
+        这里的流明(LUMINANCE)表示我们感知到的物体表面的亮度。通常使用物体表面红，绿，蓝颜色分量值的加权平均来计算流明
+    （4）format 纹理数据的格式，必须使用与internalformat相同的值
+    （5）type 纹理数据的类型
+        (一) gl.UNSIGNED_BYTE 无符号整型，每个颜色分量占据1字节
+        (二) gl.UNSIGNED_SHORT_5_6_5 RGB:每个分量分别占据5，6，5比特
+        (三) 
+        (四) 
+    （6）image 包含纹理图像的Image对象
+      
+    （7）错误 参数返回值为 INVALID_ENUM target不是合法的值
+              INVALID_OFERATION 当前目标上没有绑定纹理对象  
+
+    */
    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,image);//配置纹理图像
    gl.uniform1i(u_Sampler,0);//将0号纹理传递给着色器中的取样器变量
    gl.clear(gl.COLOR_BUFFER_BIT);
