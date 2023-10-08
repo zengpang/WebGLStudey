@@ -104,7 +104,13 @@ function loadTexture(gl,n,texture,u_Sampler,image)
     （1）target gl.TEXTURE_2D或gl.TEXTURE_CUBE_MAP
     （2）pname 纹理参数,具体的纹理参数如下
         (一) 放大方法(gl.TEXTURE_MAG_FILTER):这个参数表示，当纹理的绘制范围比纹理本身更大时，如何获取纹素颜色。
-        (二) 缩小方法()
+        (二) 缩小方法(gl.TEXTURE_MIN_FILTER):这个参数表示，当纹理的绘制范围比纹理本身更小时，如何获取纹素颜色。
+        (三) 水平填充方法(gl.TEXTURE_WRAP_S):这个参数表示，如何对纹理图像左侧或右侧的区域进行填充
+        (四) 垂直填充方法(gl.TEXTURE_WARP_T):这个参数表示，如何对纹理图像上方和下方的区域进行填充
+    （3）param 纹理参数的值，具体的纹理参数如下
+        (一) gl.NEAREST 使用原纹理上距离映射后像素(新像素)中心最近的那个像素的颜色值，作为新像素的值(使用曼哈顿距离)
+        (二) gl.LINEAR 使用距离新像素中心最近的四个像素的颜色值的加权
+           
         
     */
    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);//配置纹理参数
