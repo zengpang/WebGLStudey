@@ -2,7 +2,7 @@
 // import vertShader from'./shader/point.vert';
 // import fragShader from './shader/point.frag';
 
-const shaderPath='./shader/TexturedQuad';
+const shaderPath='./shader/multipleTextured';
 function initVertexBuffers(gl){
     const verticesTexCoords=new Float32Array([
         -0.5,0.5,0.0,1.0,
@@ -50,32 +50,40 @@ function initVertexBuffers(gl){
 }
 const ANGLE=90;
 function initTextures(gl,n){
-    const texture=gl.createTexture();//创建纹理对象
-    if (!texture) {
-        console.log('Failed to create the texture object');
+    const texture0=gl.createTexture();//创建纹理对象
+    const texture1=gl.createTexture();//创建纹理对象
+    if (!texture0 || !texture1) {
+        console.log('纹理对象创建失败');
         return false;
-      }
-    const u_Sampler=gl.getUniformLocation(gl.program,'u_Sampler');
-    if (!u_Sampler) {
-        console.log('Failed to get the storage location of u_Sampler');
-        return false;
-      }
-    const image=new Image();//创建一个image对象
-    if (!image) {
-        console.log('Failed to create the image object');
-        return false;
-      }
-    
-      console.log('image',image);
-    //注册图像加载事件的响应函数
-    image.onload=function(){
-        console.log('读取图片成功');
-        loadTexture(gl,n,texture,u_Sampler,image);
     }
-    image.src='./images/sky.jpg';
+    const u_Sampler0=gl.getUniformLocation(gl.program,'u_Sampler0');
+    const u_Sampler1=gl.getUniformLocation(gl.program,'u_Sampler1');
+    if (!u_Sampler0 || !u_Sampler1) {
+        console.log('获取着色器纹理变量失败');
+        return false;
+    }
+    const image0=new Image();//创建一个image对象
+    const image1=new Image();//创建一个image对象
+    if(!image0||!image1)
+    {
+       console.log('图像对象创建失败');
+       return false;
+    } 
+    //注册图像加载事件的响应函数
+    image0.onload=function(){
+        loadTexture(gl,n,texture0,u_Sampler0,image0,0);
+    }
+    image1.onload=function(){
+        loadTexture(gl,n,texture1,u_Sampler1,image1,1);
+    }
+    //加载图像
+    image0.src='../images/sky.jpg';
+    image1.src='../images/circle.gif';
     return true;
 }
-function loadTexture(gl,n,texture,u_Sampler,image)
+let g_texUnit0=false;
+let g_texUnit1=false;
+function loadTexture(gl,n,texture,u_Sampler,image,texUnit)
 {
    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,1);// 对纹理图形进行Y轴反转
    /**
@@ -85,7 +93,16 @@ function loadTexture(gl,n,texture,u_Sampler,image)
     系统支持的纹理单元个数取决于硬件和游览器的WebGL实现，但是在默认情况下，WebGL至少支持8个纹理单元，一些其他的系统支持的个数更多。
     内置的变量gl.TEXTURE0各表示一个纹理单元
     */
-   gl.activeTexture(gl.TEXTURE0);//开启0号纹理单元
+   if(texUnit==0)
+   {
+    gl.activeTexture(gl.TEXTURE0);//开启0号纹理单元
+    g_texUnit0=true;
+   }
+   else{
+    gl.activeTexture(gl.TEXTURE1);//开启1号纹理单元
+    g_texUnit1=true;
+   }
+   
    /**
     gl.bindTexture() 绑定纹理对象
     gl.bindTexture()方法的作用是告诉WebGL系统纹理对象使用的是那种类型的纹理。
@@ -111,10 +128,10 @@ function loadTexture(gl,n,texture,u_Sampler,image)
         (一) gl.NEAREST 使用原纹理上距离映射后像素(新像素)中心最近的那个像素的颜色值，作为新像素的值(使用曼哈顿距离)
         (二) gl.LINEAR 使用距离新像素中心最近的四个像素的颜色值的加权
     （4）错误 参数返回值为 INVALID_ENUM target不是合法的值
-              INVALID_OFERATION 当前目标上没有绑定纹理对象      
-        
+              INVALID_OFERATION 当前目标上没有绑定纹理对象        
     */
-   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);//配置纹理参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);//配置纹理参数
+   
    /**
     将纹理图像分配给纹理对象(gl.texImage2D())
     我们使用gl.texImage2D()方法将纹理图像分配给纹理对象，同时该函数还允许告诉WebGL系统关于该图像的一些特性
@@ -139,7 +156,8 @@ function loadTexture(gl,n,texture,u_Sampler,image)
               INVALID_OFERATION 当前目标上没有绑定纹理对象  
      
     */
-   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,image);//配置纹理图像
+              gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,image);
+
    /**
     将纹理单元传递给片元着色器(gl.uniform1i())
     该方法将纹理传递给片元着色器并映射到图形的表面上去
@@ -148,9 +166,12 @@ function loadTexture(gl,n,texture,u_Sampler,image)
     (二) gl.TEXTURE_CUBE_MAP纹理数据类型对应着色器纹理类型samplerCube
     除了传递纹理之外gl.uniform1i()还需传入纹理单元编号
     */
-   gl.uniform1i(u_Sampler,0);//将0号纹理传递给着色器中的取样器变量
+    gl.uniform1i(u_Sampler,texUnit);
    gl.clear(gl.COLOR_BUFFER_BIT);
-   gl.drawArrays(gl.TRIANGLE_STRIP,0,n);//绘制矩形
+   if(g_texUnit0&&g_texUnit1)
+   {
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,n);//绘制矩形
+   }
 }
 function main() {
     const vertStr=loadFile(`${shaderPath}.vert`);

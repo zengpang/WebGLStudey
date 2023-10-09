@@ -5,10 +5,10 @@
 const shaderPath='./shader/TexturedQuad';
 function initVertexBuffers(gl){
     const verticesTexCoords=new Float32Array([
-        -0.5,0.5,0.0,1.0,
-        -0.5,-0.5,0.0,0.0,
-        0.5,0.5,1.0,1.0,
-        0.5,-0.5,1.0,0.0
+        -0.5,0.5,-0.3,1.7,
+        -0.5,-0.5,-0.3,-0.2,
+        0.5,0.5,1.7,1.7,
+        0.5,-0.5,1.7,-0.2
     ]);
     const n=4;//顶点数量
    
@@ -114,7 +114,9 @@ function loadTexture(gl,n,texture,u_Sampler,image)
               INVALID_OFERATION 当前目标上没有绑定纹理对象      
         
     */
-   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);//配置纹理参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);//配置纹理参数
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);//反转纹理
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
    /**
     将纹理图像分配给纹理对象(gl.texImage2D())
     我们使用gl.texImage2D()方法将纹理图像分配给纹理对象，同时该函数还允许告诉WebGL系统关于该图像的一些特性
