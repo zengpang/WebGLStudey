@@ -130,7 +130,7 @@ function loadTexture(gl,n,texture,u_Sampler,image,texUnit)
     （4）错误 参数返回值为 INVALID_ENUM target不是合法的值
               INVALID_OFERATION 当前目标上没有绑定纹理对象        
     */
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);//配置纹理参数
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);//配置纹理参数
    
    /**
     将纹理图像分配给纹理对象(gl.texImage2D())
@@ -156,7 +156,7 @@ function loadTexture(gl,n,texture,u_Sampler,image,texUnit)
               INVALID_OFERATION 当前目标上没有绑定纹理对象  
      
     */
-              gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,image);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE,image);
 
    /**
     将纹理单元传递给片元着色器(gl.uniform1i())
