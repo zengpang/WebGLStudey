@@ -65,43 +65,35 @@ function main() {
         return;
     }
     let n=initVertexBuffers(gl);
-    const radian=Math.PI*ANGLE/180;//转为弧度制
-    const cosB=Math.cos(radian);
-    const sinB=Math.sin(radian);
-    const tx=0.5;
-    const ty=0.5;
-    const tz=0.0;
+    if(n<0)
+    {
+        console.log('获取顶点错误');
+        return;
+    }
+    //清除颜色
+    gl.clearColor(0, 0, 0, 1);
     //复合矩阵推演过程
     //平移之后旋转的坐标=坐标x平移矩阵x旋转矩阵
     //平移之后旋转的坐标=坐标x（平移矩阵x旋转矩阵）
     //这种方法，是将这些变换全部复合成一个等效的变换，
     //就得到了模型变换，或称之为建模变化，而（平移矩阵x旋转矩阵）这种复合矩阵也叫做模型矩阵
-    
-    //注意WebGL中矩阵是列主序,列主序指的是从上往下计算
-    const xformMatrix=new Matrix4();
-    xformMatrix.setRotate(ANGLE,0,0,1);
-    const u_xformMatrix=gl.getUniformLocation(gl.program,'u_xformMatrix');
-    //gl.uniformMatrix4fv(location,transpose,array)函数,将array表示的4x4矩阵分配给用location指定的uniform变量
-    //location uniform变量的存储位置
-    //Transpose 在WebGL中必须指定为false 因为该参数表示是否转置矩阵。转置操作将交换矩阵的行和列，webGL实现没有提供矩阵转置的方法，所以该参数必须设为false
-    //array 待传输的类型化数组，4x4矩阵按列主序存储在其中
-    gl.uniformMatrix4fv(u_xformMatrix,false,xformMatrix.elements);
-    
-    let a_Position=gl.getAttribLocation(gl.program,'a_Position');
-    if(a_Position<0)
+    const u_ViewMatrix=gl.getUniformLocation(gl.program, 'u_ViewMatrix');
+    const u_ModelMatrix=gl.getUniformLocation(gl.program, 'u_ModelMatrix');
+    if(!u_ViewMatrix || !u_ModelMatrix)
     {
-        console.log('获取a_Position变量地址失败');
-        return;
+       console.log('读取Shader矩阵变量失败');
+       return;
     }
-    //将顶点位置传输给attribute变量
-    gl.vertexAttrib3f(a_Position,0.0,0.0,0.0);
-    //指定清空<canvas>的颜色
-    gl.clearColor(0.0,0.0,0.0,1.0);
-    /**清空<canvas> WebGL中的gl.clear()方法实际上继承自OpenGL
-     * ,它基于多基本缓冲区模型，清空绘图区域，实际上是在清空颜色缓冲区(color Buffer)
-     * 传递参数gl.COLOR_BUFFER**/
+    const viewMatrix=new Matrix4();
+    viewMatrix.setLookAt(0.20, 0.25, 0.25, 0, 0, 0, 0, 1, 0);
+
+    const modelMatrix=new Matrix4();
+    modelMatrix.setRotate(-10, 0, 0, 1);
+
+    gl.uniformMatrix4fv(u_ViewMatrix, false, viewMatrix.elements);
+    gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
+    
     gl.clear(gl.COLOR_BUFFER_BIT);
-    //绘制
-    gl.drawArrays(gl.TRIANGLES,0,n);
+    gl.drawArrays(gl.TRIANGLES, 0, n);
     
 }
