@@ -86,10 +86,11 @@ function initVertexBuffers() {
     gl.enableVertexAttribArray(a_Color);
     return n;
 }
+//观察者坐标
 let g_eyeX=0.20;
 let g_eyeY=0.25;
 let g_eyeZ=0.25;
-
+//键盘控制
 function keydown(ev,gl,n,u_ViewMatrix,viewMatrix){
      if(ev.keyCode==39)
      {
@@ -102,6 +103,7 @@ function keydown(ev,gl,n,u_ViewMatrix,viewMatrix){
      }
      draw(gl, n, u_ViewMatrix, viewMatrix);
 }
+//绘制
 function draw(gl,n,u_ViewMatrix,viewMatrix){
     viewMatrix.setLookAt(g_eyeX,g_eyeY,g_eyeZ,0,0,0,0,1,0);
     gl.uniformMatrix4fv(u_ViewMatrix,false,viewMatrix.elements);
