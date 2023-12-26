@@ -32,7 +32,9 @@ function initVertexBuffers(gl) {
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6,0);
     gl.enableVertexAttribArray(a_Position);
     const a_Color = gl.getAttribLocation(gl.program, 'a_Color');
-    
+    if(a_Color < 0){
+        
+    }
 }
 function main() {
     const vertStr = loadFile(`${shaderPath}.vert`);
