@@ -33,6 +33,18 @@ function initVertexBuffers(gl) {
     gl.enableVertexAttribArray(a_Position);
     const a_Color = gl.getAttribLocation(gl.program, 'a_Color');
     if(a_Color < 0){
+        console.log('读取a_Color变量失败');
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Color,3,gl.FLOAT,false,FSIZE * 6,FSIZE * 3);
+    gl.enableVertexAttribArray(a_Color);
+    gl.bindBuffer(gl.ARRAY_BUFFER,null);
+    return n;
+}
+const g_near=0.0,g_far=0.5;
+function keydown(ev,gl,nf,u_near,u_far,n) {
+    switch(ev.keyCode)
+    {
         
     }
 }
