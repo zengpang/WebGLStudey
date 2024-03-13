@@ -82,9 +82,11 @@ function main() {
     }
     gl.clearColor(0, 0, 0, 1);
     const u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
-    if(u_ProjMatrix)
+    if(!u_ProjMatrix)
     {
         console.log('读取u_ProjMatrix变量失败');
         return;
     }
+    const projMatrix = new Matrix4();
+    
 }
