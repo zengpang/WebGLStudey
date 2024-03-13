@@ -45,8 +45,21 @@ const g_near=0.0,g_far=0.5;
 function keydown(ev,gl,nf,u_near,u_far,n) {
     switch(ev.keyCode)
     {
-        
+        case 39:g_near+=0.01;break;
+        case 37:g_near-=0.01;break;
+        case 38:g_far+=0.01;break;
+        case 40:g_far-=0.01;break;
+        default:return;
     }
+    draw(gl, n, u_ProjMatrix, projMatrix, nf); 
+}
+function draw(gl, n, u_near, u_far, nf)
+{
+    projMatrix.setOrtho(-0.5, 0.5, -0.5, 0.5, g_near, g_far);
+    gl.uniformMatrix4fv(u_near, false, projMatrix.elements);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    nf.innerHTML = 'near: ' + g_near.toFixed(2) + ', far: ' + g_far.toFixed(2);
+    gl.drawArrays(gl.TRIANGLES, 0, n);
 }
 function main() {
     const vertStr = loadFile(`${shaderPath}.vert`);
@@ -67,5 +80,11 @@ function main() {
         console.log('初始化顶点缓冲区失败');
         return;
     }
-
+    gl.clearColor(0, 0, 0, 1);
+    const u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
+    if(u_ProjMatrix)
+    {
+        console.log('读取u_ProjMatrix变量失败');
+        return;
+    }
 }
