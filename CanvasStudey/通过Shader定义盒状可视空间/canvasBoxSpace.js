@@ -1,4 +1,6 @@
 const shaderPath = './shader/boxSpace';
+let projMatrix;
+let u_ProjMatrix;
 function initVertexBuffers(gl) {
     const verticesColors = new Float32Array([
         // Vertex coordinates and color
@@ -41,7 +43,7 @@ function initVertexBuffers(gl) {
     gl.bindBuffer(gl.ARRAY_BUFFER,null);
     return n;
 }
-const g_near=0.0,g_far=0.5;
+let g_near=0.0,g_far=0.5;
 function keydown(ev,gl,nf,u_near,u_far,n) {
     switch(ev.keyCode)
     {
@@ -51,15 +53,22 @@ function keydown(ev,gl,nf,u_near,u_far,n) {
         case 40:g_far-=0.01;break;
         default:return;
     }
+    console.log('键盘输入',ev.keyCode);
     draw(gl, n, u_ProjMatrix, projMatrix, nf); 
 }
 function draw(gl, n, u_near, u_far, nf)
 {
-    projMatrix.setOrtho(-0.5, 0.5, -0.5, 0.5, g_near, g_far);
-    gl.uniformMatrix4fv(u_near, false, projMatrix.elements);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    nf.innerHTML = 'near: ' + g_near.toFixed(2) + ', far: ' + g_far.toFixed(2);
-    gl.drawArrays(gl.TRIANGLES, 0, n);
+ // Specify the viewing volume
+ projMatrix.setOrtho(-0.5, 0.5, -0.5, 0.5, g_near, g_far);
+
+ // Pass the projection matrix to u_ProjMatrix
+ gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
+
+ gl.clear(gl.COLOR_BUFFER_BIT);       // Clear <canvas>
+
+ // Display the current near and far values
+ nf.innerHTML = 'near: ' + Math.round(g_near * 100)/100 + ', far: ' + Math.round(g_far*100)/100;
+ gl.drawArrays(gl.TRIANGLES, 0, n);   // Draw the triangles
 }
 function main() {
     const vertStr = loadFile(`${shaderPath}.vert`);
@@ -81,13 +90,13 @@ function main() {
         return;
     }
     gl.clearColor(0, 0, 0, 1);
-    const u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
+    u_ProjMatrix = gl.getUniformLocation(gl.program, 'u_ProjMatrix');
     if(!u_ProjMatrix)
     {
         console.log('读取u_ProjMatrix变量失败');
         return;
     }
-    const projMatrix = new Matrix4();
+     projMatrix = new Matrix4();
     document.onkeydown = function(ev) {
         keydown(ev, gl, n, u_ProjMatrix, projMatrix, nf);
     }
