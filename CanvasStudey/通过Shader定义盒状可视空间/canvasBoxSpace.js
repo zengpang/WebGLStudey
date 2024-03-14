@@ -44,7 +44,7 @@ function initVertexBuffers(gl) {
     return n;
 }
 let g_near=0.0,g_far=0.5;
-function keydown(ev,gl,nf,u_near,u_far,n) {
+function keydown(ev, gl, n, u_ProjMatrix, projMatrix, nf) {
     switch(ev.keyCode)
     {
         case 39:g_near+=0.01;break;
@@ -53,7 +53,7 @@ function keydown(ev,gl,nf,u_near,u_far,n) {
         case 40:g_far-=0.01;break;
         default:return;
     }
-    console.log('键盘输入',ev.keyCode);
+    console.log('键盘输入',ev.keyCode,g_near);
     draw(gl, n, u_ProjMatrix, projMatrix, nf); 
 }
 function draw(gl, n, u_near, u_far, nf)
