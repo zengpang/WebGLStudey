@@ -88,5 +88,8 @@ function main() {
         return;
     }
     const projMatrix = new Matrix4();
-    
+    document.onkeydown = function(ev) {
+        keydown(ev, gl, n, u_ProjMatrix, projMatrix, nf);
+    }
+    draw(gl, n, u_ProjMatrix, projMatrix, nf);
 }
