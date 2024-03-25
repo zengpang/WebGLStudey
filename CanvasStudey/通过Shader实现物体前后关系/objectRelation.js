@@ -32,5 +32,20 @@ function main() {
     const modelMatrix=new Matrix4();
     const viewMatrix=new Matrix4();
     const projMatrix=new Matrix4();
+    modelMatrix.setTranslate(0.75,0,0);
+    viewMatrix.setLookAt(0, 0, 5, 0, 0, -100, 0, 1, 0);
+    projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
     
+    gl.uniformMatrix4fv(u_ModelMatrix,false,modelMatrix.elements);
+    gl.uniformMatrix4fv(u_ViewMatrix,false,viewMatrix.elements);
+    gl.uniformMatrix4fv(u_ProjMatrix, false, projMatrix.elements);
+
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLES,0,n);
+    modelMatrix.setTranslate(-0.75,0,0);
+}
+function initVertexBuffers(gl){
+    const verticesColors=new Float32Array([
+        
+    ])
 }
