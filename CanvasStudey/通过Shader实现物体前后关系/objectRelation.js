@@ -43,9 +43,12 @@ function main() {
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES,0,n);
     modelMatrix.setTranslate(-0.75,0,0);
+    gl.uniformMatrix4fv(u_ModelMatrix,false,modelMatrix.elements);
+    gl.drawArrays(gl.TRIANGLES,0,n);
 }
 function initVertexBuffers(gl){
     const verticesColors=new Float32Array([
+        0.0,1.0,-4.0,0.4,1.0,0.4, // 绿色三角形在最后面
         
     ])
 }
